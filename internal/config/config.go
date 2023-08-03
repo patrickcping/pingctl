@@ -7,34 +7,17 @@ import (
 	"strings"
 
 	"github.com/pingidentity/pingctl/cmd/version"
-	"github.com/pingidentity/pingctl/internal/pingone"
-	"github.com/pingidentity/pingctl/internal/pingone/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 // Runtime configuration
 type Config struct {
-	ConfigPath          string
-	ConfigFile          string
-	CredentialsPath     string
-	CredentialsFile     string
-	PingOneClientConfig *client.Config
-}
-
-// Config profiles configuration - persists to the file in `Config.ConfigPath/Config.ConfigFile`
-type ProfilesConfig struct {
-	// The version of config for backward compatibility.  If empty, assume the latest version
-	ConfigVersion *string `json:"_configVersion,omitempty"`
-	// The profiles associated with the user's cli installation.  If empty from file, run a config init
-	Profiles []ProfilesConfig `json:"profiles,omitempty"`
-}
-
-// An individual config profile - persists to the file in `ConfigPath/ConfigFile` under `ProfilesConfig`
-type ProfileConfig struct {
-	// The ID of the profile
-	Id             string `json:"id"`
-	PingOneCmdAuth *pingone.ProfilePingOneCmdAuthConfig
+	ConfigPath      string
+	ConfigFile      string
+	CredentialsPath string
+	CredentialsFile string
+	ProfilePrefix   *string
 }
 
 var (
@@ -161,6 +144,7 @@ func tryMigrateLegacyConfig(newConfigPath string) (*bool, error) {
 func writeDefaultConfig(configPath string) error {
 
 	viper.Set("_configVersion", version.GetVersion())
+	viper.Set("activeprofile", "default")
 	viper.Set("profiles.default.name", "Default Profile")
 
 	_, err := os.Stat(configPath)

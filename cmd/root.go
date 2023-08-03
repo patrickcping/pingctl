@@ -4,15 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pingidentity/pingctl/cmd/docs"
-	"github.com/pingidentity/pingctl/cmd/info"
+	"github.com/pingidentity/pingctl/cmd/generate"
 	"github.com/pingidentity/pingctl/cmd/k8s"
 	"github.com/pingidentity/pingctl/cmd/license"
-	"github.com/pingidentity/pingctl/cmd/lint"
-	"github.com/pingidentity/pingctl/cmd/pingone"
 	"github.com/pingidentity/pingctl/cmd/version"
 	"github.com/pingidentity/pingctl/internal/config"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -49,10 +47,15 @@ func Execute() {
 }
 
 func init() {
+	// Subcommands
+	rootCmd.AddCommand(k8s.K8sCmd)
+	rootCmd.AddCommand(license.LicenseCmd)
+	rootCmd.AddCommand(generate.GenerateCmd)
 	rootCmd.AddCommand(version.VersionCmd)
 
 	// Global flags
 	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.pingidentity/pingctl-config)")
-	rootCmd.PersistentFlags().StringVarP(&Profile, "profile", "p", "", "set the profile to use by it's ID (defaults to the selected profile in the configuration file)")
+	rootCmd.PersistentFlags().StringVarP(&Profile, "profile", "p", "default", "set the profile to use by it's ID (defaults to the currently selected profile)")
+	viper.BindPFlag("profile", rootCmd.PersistentFlags().Lookup("activeprofile"))
 }
