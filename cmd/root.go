@@ -1,14 +1,12 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/pingidentity/pingctl/cmd/generate"
+	"github.com/pingidentity/pingctl/cmd/export"
 	"github.com/pingidentity/pingctl/cmd/k8s"
 	"github.com/pingidentity/pingctl/cmd/license"
 	"github.com/pingidentity/pingctl/cmd/version"
-	"github.com/pingidentity/pingctl/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -34,12 +32,6 @@ to quickly create a Cobra application.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-
-	if err := config.Init(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
@@ -47,15 +39,25 @@ func Execute() {
 }
 
 func init() {
-	// Subcommands
-	rootCmd.AddCommand(k8s.K8sCmd)
-	rootCmd.AddCommand(license.LicenseCmd)
-	rootCmd.AddCommand(generate.GenerateCmd)
-	rootCmd.AddCommand(version.VersionCmd)
+
+	// Core commands
+	rootCmd.AddCommand(
+		// profile.ProfileCmd,
+		version.VersionCmd,
+	)
+
+	// General function commands
+	rootCmd.AddCommand(
+		k8s.K8sCmd,
+		//	config.ConfigCmd,
+		export.ExportCmd,
+		license.LicenseCmd,
+		//	lint.LintCmd,
+	)
 
 	// Global flags
 	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.pingidentity/pingctl-config)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "cli-config", "", "config file (default is $HOME/.pingidentity/pingctl-config)")
 	rootCmd.PersistentFlags().StringVarP(&Profile, "profile", "p", "default", "set the profile to use by it's ID (defaults to the currently selected profile)")
 	viper.BindPFlag("profile", rootCmd.PersistentFlags().Lookup("activeprofile"))
 }

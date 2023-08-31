@@ -8,7 +8,7 @@ import (
 
 	"github.com/patrickcping/pingone-go-sdk-v2/management"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone"
-	"github.com/pingidentity/pingctl/internal/connector/pingone/sdk"
+	"github.com/pingidentity/pingctl/connectors/pingone/sdk"
 	"github.com/pingidentity/pingctl/pingtf/generate/internal"
 )
 

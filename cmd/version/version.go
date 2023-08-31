@@ -7,13 +7,6 @@ import (
 )
 
 var (
-	// these will be set by the goreleaser configuration
-	// to appropriate values for the compiled binary
-	version string = "dev"
-
-	// goreleaser can also pass the specific commit if you want
-	commit string = ""
-
 	noUpdateCheck bool
 )
 
@@ -25,7 +18,7 @@ var VersionCmd = &cobra.Command{
 
 		versionString := GetVersion()
 		if !noUpdateCheck {
-			versionString += " (verison check here)"
+			versionString += " (version check here)"
 		}
 
 		fmt.Printf("pingctl version %s\n", versionString)
@@ -37,9 +30,10 @@ func init() {
 }
 
 func GetVersion() string {
-	versionString := version
-	if commit != "" {
-		versionString += fmt.Sprintf(".%s", commit)
-	}
-	return versionString
+	// versionString := version
+	// if commit != "" {
+	// 	versionString += fmt.Sprintf(".%s", commit)
+	// }
+	// return versionString
+	return "todo"
 }

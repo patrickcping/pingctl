@@ -8,7 +8,7 @@ tools:
 	go generate -tags tools tools/tools.go
 
 build: fmtcheck
-	go install -ldflags="-X github.com/pingidentity/pingctl/cmd/version/version.version=$(VERSION)"
+	go install -ldflags="-X main.version=$(VERSION)"
 
 test: fmtcheck
 	go test $(TEST) $(TESTARGS) -timeout=5m
